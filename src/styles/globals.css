@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html,
 body {
   height: 100vh;
@@ -6,7 +10,8 @@ body {
   margin: 0;
 }
 
-#__next {
+#__next,
+main {
   height: inherit;
   width: inherit;
 }
