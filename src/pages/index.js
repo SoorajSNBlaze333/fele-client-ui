@@ -2,6 +2,7 @@ import Head from 'next/head'
 import { Inter } from 'next/font/google'
 import Link from 'next/link'
 import { useState } from 'react'
+import Router from 'next/router'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,6 +18,7 @@ export default function Home() {
     console.log("Came here");
     console.log(userCredentials);
     // TODO make the api call to login
+    Router.push('/organization');
   }
 
   const handleInput = (e) => setUserCredentials(prev => ({
