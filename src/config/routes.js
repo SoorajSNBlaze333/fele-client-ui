@@ -1,6 +1,7 @@
-const BASE_URL = "http://localhost:8080";
+const BASE_URL = "http://localhost:8005";
+// const FELE_ROUTES = "/api/fele";
+const LOCAL_ROUTES = "/api/localorganization";
 
-export const LOGIN = BASE_URL + "/login";
-export const ORGANIZATION_NETWORKS = BASE_URL + "/networks";
-export const ORGANIZATION_CHANNELS = BASE_URL + "/channels";
-export const FELE_USERS = BASE_URL + "/fele-users";
+export const LOGIN = BASE_URL + LOCAL_ROUTES + "/login";
+export const ORGANIZATION_NETWORKS = BASE_URL + LOCAL_ROUTES + "/network/list";
+export const ORGANIZATION_CHANNELS = BASE_URL + LOCAL_ROUTES + "/channels/list";

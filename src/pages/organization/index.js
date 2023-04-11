@@ -6,6 +6,7 @@ import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import Router from "next/router";
 import { AppContext } from "../_app";
+import { getOrganizationNetworks } from "@/models/Organization";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -44,6 +45,9 @@ export default function Organization() {
 
   useEffect(() => {
     // TODO Fetch networks
+    getOrganizationNetworks()
+      .then(response => console.log(response))
+      .catch(error => console.log(error));
     setNetworks([  
       { name: "Please select a network", value: null },
       { name: "Artemis", value: "artemis"  },

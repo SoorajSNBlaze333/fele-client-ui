@@ -1,13 +1,11 @@
+// https://gist.github.com/SoorajSNBlaze333/e6cd7d3103272af7298b4414cd19b024.
 import axios from 'axios';
 
 class API {
   static current_queue = [];
   static pendingPromise = false;
   static http = axios;
-
-  constructor() {
-    API.http.interceptors.response.use(this.onSuccess, this.onError);
-  }
+  static retryTimeout = null;
 
   static queue(promise) {
     return new Promise((resolve, reject) => {
@@ -20,9 +18,25 @@ class API {
     });
   }
 
+  static retry() {
+    clearTimeout(API.retryTimeout);
+    console.log("Trying to connect to the internet!");
+    API.retryTimeout = setTimeout(() => API.dequeue(), 5000);
+  }
+
+  static afterPromise = (item, resolve = false, data) => {
+    this.workingOnPromise = false;
+    if (resolve) item.resolve(data);
+    else item.reject(data);
+    API.dequeue();
+  }
+
   static dequeue() {
     if (this.workingOnPromise) {
       return false;
+    }
+    if (window.navigator && !window.navigator.onLine) {
+      return API.retry();
     }
     const item = API.current_queue.shift();
     if (!item) {
@@ -31,30 +45,12 @@ class API {
     try {
       this.workingOnPromise = true;
       item.promise()
-        .then((value) => {
-          this.workingOnPromise = false;
-          item.resolve(value);
-          API.dequeue();
-        })
-        .catch(err => {
-          this.workingOnPromise = false;
-          item.reject(err);
-          API.dequeue();
-        })
-    } catch (err) {
-      this.workingOnPromise = false;
-      item.reject(err);
-      API.dequeue();
+        .then((value) => API.afterPromise(item, true, value))
+        .catch((error) => API.afterPromise(item, false, error))
+    } catch (error) {
+      API.afterPromise(item, false, error);
     }
     return true;
-  }
-
-  static onSuccess(response) {
-    return response.data;
-  }
-
-  static onError(error) {
-    Promise.reject(error);
   }
 
   static debug() {
@@ -63,24 +59,17 @@ class API {
     , 2000))
   }
 
-  static get(url, options) {
-    return this.http.get(url, options)
+  static async request(options) {
+    console.log(options);
+    return this.http({ ...options, headers: { ...options.headers, organization: "uhcl" }})
+      .then((response) => response.data)
+      .catch((error) => Promise.reject(error));
   }
 
-  static post(url, data, options) {
-    return this.http.post(url, data, options)
-  }
-
-  static postWithFiles(url, data, options) {
-    return this.http.post(url, data, { ...options, headers: { ...options.headers, 'Content-Type': 'multipart/form-data' }})
-  }
-
-  static put(url, options) {
-    return this.http.put(url, options)
-  }
-
-  static delete(url, options) {
-    return this.http.delete(url, options)
+  static async post(url, data, options) {
+    return this.http.post(url, data, { ...options, headers: { ...options.headers, organization: "uhcl" }})
+      .then((response) => response.data)
+      .catch((error) => Promise.reject(error));
   }
 }
 
@@ -88,21 +77,17 @@ new API();
 
 const queuedAPI = {
   get(url = '', options = {}) {
-    return API.queue(() => API.get(url, options));
+    return API.queue(() => API.request({ method: 'get', url, ...options }));
   },
-  post(url = '', data = {}, options = {}) {
+  post(url = '', data, options = {}) {
     return API.queue(() => API.post(url, data, options));
   },
-  postWithFiles(url = '', data = {}, options = {}) {
-    return API.queue(() => API.postWithFiles(url, data, options));
-  },
   put(url = '', options = {}) {
-    return API.queue(() => API.put(url, options));
+    return API.queue(() => API.request({ method: 'put', url, ...options }));
   },
   delete(url = '', options = {}) {
-    return API.queue(() => API.delete(url, options));
+    return API.queue(() => API.request({ method: 'delete', url, ...options }));
   }
 }
 
-
-export default API;
+export default queuedAPI;

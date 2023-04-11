@@ -3,22 +3,21 @@ import { Inter } from 'next/font/google'
 import Link from 'next/link'
 import { useState } from 'react'
 import Router from 'next/router'
+import { login } from '@/models/Auth'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
   const [userCredentials, setUserCredentials] = useState({ username: '', password: '' });
 
-  const handleLogin = (e) => {
+  const handleLogin = async(e) => {
     e.preventDefault();
     if (!userCredentials.username.length || !userCredentials.password.length) {
-      // TODO handle error if username or password is missing
       return;
     }
-    console.log("Came here");
-    console.log(userCredentials);
-    // TODO make the api call to login
-    Router.push('/organization');
+    return login(userCredentials)
+      .then(() => Router.push('/organization'))
+      .catch(error => console.log(error))
   }
 
   const handleInput = (e) => setUserCredentials(prev => ({
