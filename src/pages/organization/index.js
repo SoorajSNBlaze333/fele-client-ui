@@ -79,6 +79,7 @@ const Organization = ({ orgConfig = {
     if (organizationConfig.network !== "Please select a network") {
       fetchChannels();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [networks, organizationConfig.network]);
 
   const renderButton = () => {
