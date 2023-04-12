@@ -1,25 +1,11 @@
 import Head from "next/head";
 import { Inter } from 'next/font/google';
-import { useContext, useEffect, useState } from "react";
-import { AppContext } from "../_app";
-import Router from "next/router";
+import withAuthentication from "@/components/withAuthentication";
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Admin() {
-  const [isLoading, setIsLoading] = useState(true);
-  const { context } = useContext(AppContext);
-
-  useEffect(() => {
-    if (!context.network || !context.channel) {
-      Router.push("/");
-    } else {
-      setIsLoading(false)
-    }
-  }, [context])
-
+const Admin = () => {
   const renderDashboard = () => {
-    if (isLoading) return <div>Loading</div>
     return (
       <section>Admin Dashboard</section>
     )
@@ -39,3 +25,5 @@ export default function Admin() {
     </main>
   </>)
 }
+
+export default withAuthentication(Admin);

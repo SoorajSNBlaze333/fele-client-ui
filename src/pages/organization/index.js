@@ -1,29 +1,32 @@
 import Head from "next/head";
-import Link from "next/link";
 import { Inter } from 'next/font/google';
-import { Fragment, useContext, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Listbox, Transition } from '@headlessui/react';
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
-import Router from "next/router";
-import { AppContext } from "../_app";
-import { getOrganizationNetworks } from "@/models/Organization";
+import { ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import { useRouter } from "next/router";
+import { getOrganizationChannels, getOrganizationNetworks } from "@/models/Organization";
+import withAuthentication from "@/components/withAuthentication";
+import { setItem } from "@/lib/Storage";
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Organization() {
+const Organization = ({ orgConfig = { 
+  network: "Please select a network",
+  channel: "Please select a channel"
+}}) => {
+  const router = useRouter();
   const [organizationConfig, setOrganizationConfig] = useState({ 
-    network: { name: "Please select a network", value: null }, 
-    channel: { name: "Please select a channel", value: null }, 
+    network: orgConfig.network, 
+    channel: orgConfig.channel
   });
   const [networks, setNetworks] = useState([]);
   const [channels, setChannels] = useState([]);
-  const appContext = useContext(AppContext);
 
   const handleChange = (name, value) => {
     if (name === "network") {
       setOrganizationConfig(() => ({
         network: value,
-        channel: { name: "Please select a channel", value: null }
+        channel: "Please select a channel"
       }));
     } else if (name === "channel") {
       setOrganizationConfig(prev => ({
@@ -34,35 +37,57 @@ export default function Organization() {
   }
 
   const handleDashboard = () => {
-    // TODO (update this to local storage for ease of use)
-    appContext.setContext(prev => ({
-      ...prev,
-      network: organizationConfig.network.value,
-      channel: organizationConfig.channel.value
-    }))
-    Router.push('/admin');
+    const orgData = {
+      network: organizationConfig.network,
+      channel: organizationConfig.channel
+    }
+    setItem("organization", JSON.stringify(orgData))
+    router.push('/admin');
+  }
+
+  const fetchNetworks = async() => {
+    return getOrganizationNetworks()
+      .then(networks => {
+        setNetworks(() => {
+          const newNetworks = [];
+          newNetworks.push("Please select a network");
+          newNetworks.push(...networks);
+          return newNetworks;
+        });
+      })
+      .catch(error => console.log(error));
+  }
+
+  const fetchChannels = async() => {
+    return getOrganizationChannels(organizationConfig.network)
+      .then(channels => {
+        setChannels(() => {
+          const newChannels = [];
+          newChannels.push("Please select a channel");
+          newChannels.push(...channels);
+          return newChannels;
+        });
+      })
+      .catch(error => console.log(error));
   }
 
   useEffect(() => {
-    // TODO Fetch networks
-    getOrganizationNetworks()
-      .then(response => console.log(response))
-      .catch(error => console.log(error));
-    setNetworks([  
-      { name: "Please select a network", value: null },
-      { name: "Artemis", value: "artemis"  },
-      { name: "UHCL", value: "uhcl" }
-    ])
+    fetchNetworks();
   }, [])
 
   useEffect(() => {
-    // TODO Fetch channels
-    setChannels([
-      { name: "Please select a channel", value: null },
-      { name: "UHCL", value: "uhcl" },
-      { name: "UTD",  value: "utd" }
-    ])
+    if (organizationConfig.network !== "Please select a network") {
+      fetchChannels();
+    }
   }, [networks, organizationConfig.network]);
+
+  const renderButton = () => {
+    const isDisabled = (organizationConfig.network === "Please select a network" || organizationConfig.channel === "Please select a channel");
+    return (<button
+      disabled={isDisabled}
+      className={`w-full rounded-md bg-green-700/80 text-white p-2 ${isDisabled ? "bg-green-700/60 cursor-not-allowed" : ""}`}
+      onClick={handleDashboard}>Go to Dashboard</button>)
+  }
 
   return (
     <>
@@ -81,10 +106,10 @@ export default function Organization() {
             </section>
             <section className="w-100 flex flex-col mb-7">
               <label htmlFor="network-selection" className="w-100 text-slate-500 font-medium mb-1">Network</label>
-              <Listbox id="network-selection" name="network" value={organizationConfig.network.name} onChange={(value) => handleChange("network", value)}>
+              <Listbox id="network-selection" name="network" value={organizationConfig.network} onChange={(value) => handleChange("network", value)}>
                 <div className="relative mt-1">
                   <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left border-2 border-slate-200 focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                    <span className="block truncate">{organizationConfig.network.name}</span>
+                    <span className="block truncate">{organizationConfig.network}</span>
                     <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                       <ChevronUpDownIcon
                         className="h-5 w-5 text-gray-400"
@@ -115,7 +140,7 @@ export default function Organization() {
                                 selected ? 'font-medium' : 'font-normal'
                               }`}
                             >
-                              {network.name}
+                              {network}
                             </span>
                           )}
                         </Listbox.Option>
@@ -127,10 +152,10 @@ export default function Organization() {
             </section>
             <section className="w-100 flex flex-col mb-7">
               <label htmlFor="channel-selection" className="w-100 text-slate-500 font-medium mb-1">Channel</label>
-              <Listbox id="channel-selection" name="channel" disabled={!organizationConfig.network.value} value={organizationConfig.channel.name} onChange={(value) => handleChange("channel", value)}>
+              <Listbox id="channel-selection" name="channel" disabled={organizationConfig.network === "Please select a network"} value={organizationConfig.channel.name} onChange={(value) => handleChange("channel", value)}>
                 <div className="relative mt-1">
-                  <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left border-2 border-slate-200 focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                    <span className="block truncate">{organizationConfig.channel.name}</span>
+                  <Listbox.Button className={`relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left border-2 border-slate-200 focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm ${organizationConfig.network === "Please select a network" ? "bg-slate-200 cursor-not-allowed" : ""}`}>
+                    <span className="block truncate">{organizationConfig.channel}</span>
                     <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                       <ChevronUpDownIcon
                         className="h-5 w-5 text-gray-400"
@@ -161,7 +186,7 @@ export default function Organization() {
                                 selected ? 'font-medium' : 'font-normal'
                               }`}
                             >
-                              {channel.name}
+                              {channel}
                             </span>
                           )}
                         </Listbox.Option>
@@ -175,7 +200,7 @@ export default function Organization() {
               {JSON.stringify(organizationConfig)}
             </section>
             <section className="w-full">
-              <button disabled={!organizationConfig.network.value || !organizationConfig.channel.value} className="w-full rounded-md bg-green-700/80 text-white p-2" onClick={handleDashboard}>Go to Dashboard</button>
+              {renderButton()}
             </section>
           </section>
         </article>
@@ -183,3 +208,5 @@ export default function Organization() {
     </>
   )
 }
+
+export default withAuthentication(Organization);

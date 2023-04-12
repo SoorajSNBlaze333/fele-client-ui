@@ -4,10 +4,11 @@ import Link from 'next/link'
 import { useState } from 'react'
 import Router from 'next/router'
 import { login } from '@/models/Auth'
+import checkAuth from '@/components/checkAuth'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Home() {
+const Home = () => {
   const [userCredentials, setUserCredentials] = useState({ username: '', password: '' });
 
   const handleLogin = async(e) => {
@@ -65,3 +66,5 @@ export default function Home() {
     </>
   )
 }
+
+export default checkAuth(Home);
