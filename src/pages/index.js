@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import Router from 'next/router'
 import { login } from '@/models/Auth'
-import checkAuth from '@/components/checkAuth'
+import checkAuth from '@/components/hoc/checkAuth'
 
 const inter = Inter({ subsets: ['latin'] })
 

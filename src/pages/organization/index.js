@@ -5,7 +5,7 @@ import { Listbox, Transition } from '@headlessui/react';
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { useRouter } from "next/router";
 import { getOrganizationChannels, getOrganizationNetworks } from "@/models/Organization";
-import withAuthentication from "@/components/withAuthentication";
+import withAuthentication from "@/components/hoc/withAuthentication";
 import { setItem } from "@/lib/Storage";
 
 const inter = Inter({ subsets: ['latin'] })
