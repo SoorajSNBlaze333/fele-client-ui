@@ -5,12 +5,21 @@ import { useEffect, useState } from "react";
 import { getItem } from "@/lib/Storage";
 import Header from "@/components/shared/Header";
 import { useRouter } from "next/router";
+import { getOrganizationUsers } from "@/models/Organization";
 
 const inter = Inter({ subsets: ['latin'] })
 
 const Admin = () => {
-  const [organizationConfig, setOrganizationConfig] = useState({ network: "", channel: "" })
+  const [organizationConfig, setOrganizationConfig] = useState({ network: "", channel: "" });
+  const [users, setUsers] = useState([]);
   const router = useRouter();
+  const userHeaders = ["Username", "Role", "Actions"];
+
+  const fetchLocalOrgUsers = async() => {
+    return getOrganizationUsers()
+      .then(users => setUsers(users))
+      .catch(error => console.log(error))
+  }
 
   useEffect(() => {
     const organization = getItem("organization");
@@ -18,8 +27,17 @@ const Admin = () => {
       router.push('/organization');
     } else {
       setOrganizationConfig(JSON.parse(organization));
+      fetchLocalOrgUsers();
     }
-  }, [])
+  }, []);
+
+  const renderUser = (user, index) => {
+    return <section className="flex justify-between items-center py-1">
+      <p>{user.username}</p>
+      <p>{user.role}</p>
+      <section>Actions</section>
+    </section>
+  }
 
   return (<>
     <Head>
@@ -33,7 +51,10 @@ const Admin = () => {
       <main className="col-span-8">
         <article className="">
           <Header network={organizationConfig.network} channel={organizationConfig.channel} />
-          <section className="py-2 px-4">Admin Dashboard</section>
+          <section className="py-2 px-4">
+            <section className="flex justify-between items-center font-semibold py-1 border-b-2 border-slate-100">{userHeaders.map((heading, index) => <p key={"user-heading-"+index}>{heading}</p>)}</section>
+            <section>{users.map(renderUser)}</section>
+          </section>
         </article>
       </main>
     </div>
