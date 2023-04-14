@@ -5,7 +5,8 @@ import { removeItem, setItem } from "@/lib/Storage";
 export const login = async(credentials) => {
   return API.post(LOGIN, credentials, { headers: { organization: credentials.organization }})
     .then(data => data.token)
-    .then(token => setItem("token", token)) // TODO get the jwt token and store in local storage
+    .then(token => setItem("token", token))
+    .then(() => setItem("organization", { organization: credentials.organization }))
     .catch(error => { throw new Error(error) })
 }
 
@@ -15,4 +16,7 @@ export const verifyToken = async(token) => {
     .catch(error => { throw new Error(error) })
 }
 
-export const logout = () => removeItem("token");
+export const logout = () => {
+  removeItem("token");
+  removeItem("organization");
+}

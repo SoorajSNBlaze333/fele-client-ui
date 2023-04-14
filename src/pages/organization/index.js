@@ -6,7 +6,7 @@ import { ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { useRouter } from "next/router";
 import { getOrganizationChannels, getOrganizationNetworks } from "@/models/Organization";
 import withAuthentication from "@/components/hoc/withAuthentication";
-import { setItem } from "@/lib/Storage";
+import { getItem, setItem } from "@/lib/Storage";
 import LogoutButton from "@/components/shared/LogoutButton";
 
 const inter = Inter({ subsets: ['latin'] })
@@ -39,6 +39,7 @@ const Organization = ({ orgConfig = {
 
   const handleDashboard = () => {
     const orgData = {
+      ...getItem("organization"),
       network: organizationConfig.network,
       channel: organizationConfig.channel
     }

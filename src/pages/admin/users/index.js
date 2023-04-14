@@ -5,15 +5,17 @@ import { useEffect, useState } from "react";
 import { getItem } from "@/lib/Storage";
 import Header from "@/components/shared/Header";
 import { useRouter } from "next/router";
-import { getOrganizationUsers } from "@/models/Organization";
+import { deleteLocalUser, getOrganizationUsers } from "@/models/Organization";
+import { TrashIcon } from "@heroicons/react/20/solid";
+import Modal from "@/components/shared/Dialog";
 
 const inter = Inter({ subsets: ['latin'] })
 
 const Admin = () => {
-  const [organizationConfig, setOrganizationConfig] = useState({ network: "", channel: "" });
+  const [organizationConfig, setOrganizationConfig] = useState({ organization: "", network: "", channel: "" });
   const [users, setUsers] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState({ show: false, data: {} });
   const router = useRouter();
-  const userHeaders = ["Username", "Role", "Actions"];
 
   const fetchLocalOrgUsers = async() => {
     return getOrganizationUsers()
@@ -32,11 +34,23 @@ const Admin = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleDeleteUser = async({ show, data }) => {
+    return deleteLocalUser(data.username)
+      .then(() => fetchLocalOrgUsers()) // TODO remove the username from the state
+      .then(() => setIsModalOpen({ show: false, data: {} }))
+      .catch(error => console.log(error))
+  }
+
   const renderUser = (user, index) => {
-    return <section className="flex justify-between items-center py-1">
-      <p>{user.username}</p>
-      <p>{user.role}</p>
-      <section>Actions</section>
+    return <section key={"local-user-"+index} className="grid grid-cols-9 py-1.5 border-b-2 border-slate-50 text-sm">
+      <p className="col-span-3 flex flex-col justify-center items-start">{user.username}</p>
+      <p className="col-span-3 flex flex-col justify-center items-start capitalize">{user.role}</p>
+      <section className="col-span-3 flex flex-col justify-center items-start">
+        <button onClick={() => setIsModalOpen({ show: true, data: user })} type="button" className="rounded-lg text-red-600 bg-slate-100 p-2 text-xs inline-flex justify-center items-center gap-1 transition-all duration-200 disabled:opacity-30 hover:bg-slate-200 disabled:cursor-not-allowed">
+          <TrashIcon className="h-3.5 w-3.5" />
+          Delete User
+        </button>
+      </section>
     </section>
   }
 
@@ -51,13 +65,22 @@ const Admin = () => {
       <aside className="col-span-2 bg-green-100/70 h-100 w-full"></aside>
       <main className="col-span-8">
         <article className="">
-          <Header network={organizationConfig.network} channel={organizationConfig.channel} />
+          <Header 
+            organization={organizationConfig.organization} 
+            network={organizationConfig.network} 
+            channel={organizationConfig.channel}
+          />
           <section className="py-2 px-4">
-            <section className="flex justify-between items-center font-semibold py-1 border-b-2 border-slate-100">{userHeaders.map((heading, index) => <p key={"user-heading-"+index}>{heading}</p>)}</section>
+            <section className="grid grid-cols-9 font-semibold py-1.5 border-b-2 border-slate-100">
+              <p className="col-span-3">Username</p>
+              <p className="col-span-3">Role</p>
+              <p className="col-span-3">Actions</p>
+            </section>
             <section>{users.map(renderUser)}</section>
           </section>
         </article>
       </main>
+      <Modal show={isModalOpen} onToggle={setIsModalOpen} handleAction={handleDeleteUser} />
     </div>
 
   </>)
