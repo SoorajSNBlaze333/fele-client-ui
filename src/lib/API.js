@@ -67,7 +67,7 @@ class API {
   }
 
   static async post(url, data, options) {
-    return this.http.post(url, data, { ...options, headers: { ...options.headers, organization: "uhcl" }})
+    return this.http.post(url, data, { ...options, headers: { ...options.headers }})
       .then((response) => response.data)
       .catch((error) => Promise.reject(error));
   }

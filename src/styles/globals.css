@@ -15,3 +15,7 @@ main {
   height: inherit;
   width: inherit;
 }
+
+.org-article {
+  height: calc(100vh - 84px);
+}

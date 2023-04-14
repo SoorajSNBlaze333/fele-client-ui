@@ -1,19 +1,20 @@
 import Head from 'next/head'
 import { Inter } from 'next/font/google'
-import Link from 'next/link'
+// import Link from 'next/link'
 import { useState } from 'react'
 import Router from 'next/router'
 import { login } from '@/models/Auth'
 import checkAuth from '@/components/hoc/checkAuth'
+// import DebugJSON from '@/components/debug/DebugJSON'
 
 const inter = Inter({ subsets: ['latin'] })
 
 const Home = () => {
-  const [userCredentials, setUserCredentials] = useState({ username: '', password: '' });
+  const [userCredentials, setUserCredentials] = useState({ username: '', password: '', organization: '' });
 
   const handleLogin = async(e) => {
     e.preventDefault();
-    if (!userCredentials.username.length || !userCredentials.password.length) {
+    if (!userCredentials.username.length || !userCredentials.password.length || !userCredentials.organization.length) {
       return;
     }
     return login(userCredentials)
@@ -52,14 +53,19 @@ const Home = () => {
                   <input id="password" type="password" name="password" required className="w-100 border-2 border-slate-200 rounded-lg p-2" placeholder="Enter your password" onChange={handleInput} />
                 </fieldset>
                 <fieldset className="w-100 flex flex-col mb-7">
+                  <label htmlFor="organization" className="w-100 text-slate-500 font-medium mb-1">Organization</label>
+                  <input id="organization" type="text" name="organization" required className="w-100 border-2 border-slate-200 rounded-lg p-2" placeholder="Enter your organization" onChange={handleInput} />
+                </fieldset>
+                <fieldset className="w-100 flex flex-col mb-7">
                   <button type="submit" className="rounded-md bg-green-700/80 text-white p-2">Login</button>
                 </fieldset>
               </form>
             </section>
-            <section className="w-100 flex justify-center items-center">
+            {/* <section className="w-100 flex justify-center items-center">
               <p className="text-slate-400 font-medium">{"Don't have an account ?"}</p>
               <Link href="/register" className="ml-1 font-semibold text-green-700">Register</Link>
-            </section>
+            </section> */}
+            {/* <DebugJSON json={userCredentials} /> */}
           </section>
         </article>
       </main>

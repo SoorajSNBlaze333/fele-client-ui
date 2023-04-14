@@ -11,7 +11,7 @@ const checkAuth = (Component) => {
       const token = getItem("token");
       const organization = getItem("organization");
       if (token) {
-        if (organization) return router.push('/admin')
+        if (organization) return router.push('/admin/users')
         return router.push('/organization');
       }
       setIsLoading(false);

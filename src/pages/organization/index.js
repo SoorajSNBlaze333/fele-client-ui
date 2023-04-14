@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { getOrganizationChannels, getOrganizationNetworks } from "@/models/Organization";
 import withAuthentication from "@/components/hoc/withAuthentication";
 import { setItem } from "@/lib/Storage";
+import LogoutButton from "@/components/shared/LogoutButton";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -42,7 +43,7 @@ const Organization = ({ orgConfig = {
       channel: organizationConfig.channel
     }
     setItem("organization", JSON.stringify(orgData))
-    router.push('/admin');
+    router.push('/admin/users');
   }
 
   const fetchNetworks = async() => {
@@ -99,8 +100,9 @@ const Organization = ({ orgConfig = {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={inter.className}>
-        <article className="h-full w-full flex justify-center items-center">
-          <section className="h-auto flex flex-col w-[370px] text-sm">
+        <article className="h-full w-full flex justify-center items-center relative">
+          <LogoutButton />
+          <section className="h-100 flex flex-col w-[370px] text-sm">
             <section className="w-100 mb-8">
               <p className="text-2xl font-bold">Network & Channel</p>
               <p className="text-base text-slate-400">{"Choose your organization's Network and Channel"}</p>
@@ -196,9 +198,6 @@ const Organization = ({ orgConfig = {
                   </Transition>
                 </div>
               </Listbox>
-            </section>
-            <section className="w-100 flex flex-col mb-7">
-              {JSON.stringify(organizationConfig)}
             </section>
             <section className="w-full">
               {renderButton()}

@@ -29,6 +29,7 @@ const Admin = () => {
       setOrganizationConfig(JSON.parse(organization));
       fetchLocalOrgUsers();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const renderUser = (user, index) => {
