@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { getItem } from "@/lib/Storage";
 import Header from "@/components/shared/Header";
 import { useRouter } from "next/router";
-import { deleteLocalUser, getOrganizationUsers } from "@/models/Organization";
+import { deleteLocalUser, fetchLocalOrganizationMappings } from "@/models/Organization";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import Modal from "@/components/shared/Dialog";
 import Sidebar from "@/components/shared/Sidebar";
@@ -14,13 +14,13 @@ const inter = Inter({ subsets: ['latin'] })
 
 const Mappings = () => {
   const [organizationConfig, setOrganizationConfig] = useState({ organization: "", network: "", channel: "" });
-  const [users, setUsers] = useState([]);
+  const [mappings, setMappings] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState({ show: false, data: {} });
   const router = useRouter();
 
-  const fetchLocalOrgUsers = async() => {
-    return getOrganizationUsers()
-      .then(users => setUsers(users))
+  const fetchLocalOrgMappings = async(org) => {
+    return fetchLocalOrganizationMappings(org.network, org.channel)
+      .then(mappings => setMappings(mappings))
       .catch(error => console.log(error))
   }
 
@@ -29,8 +29,9 @@ const Mappings = () => {
     if (!organization) {
       router.push('/organization');
     } else {
-      setOrganizationConfig(JSON.parse(organization));
-      fetchLocalOrgUsers();
+      const org = JSON.parse(organization)
+      setOrganizationConfig(org);
+      fetchLocalOrgMappings(org);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -38,15 +39,16 @@ const Mappings = () => {
   const handleDeleteUser = async({ show, data }) => {
     return deleteLocalUser(data.username)
       .then(() => fetchLocalOrgUsers()) // TODO remove the username from the state
-      .then(() => setIsModalOpen({ show: false, data: {} }))
+      .then(() => setIsModalOpen({ show, data: {} }))
       .catch(error => console.log(error))
   }
 
-  const renderUser = (user, index) => {
-    return <section key={"local-user-"+index} className="grid grid-cols-9 py-1.5 border-b-2 border-slate-50 text-sm">
-      <p className="col-span-3 flex flex-col justify-center items-start">{user.username}</p>
-      <p className="col-span-3 flex flex-col justify-center items-start capitalize">{user.role}</p>
-      <section className="col-span-3 flex flex-col justify-center items-start">
+  const renderMappings = (user, index) => {
+    return <section key={"local-user-"+index} className="grid grid-cols-8 py-1.5 border-b-2 border-slate-50 text-sm">
+      <p className="col-span-2 flex flex-col justify-center items-start">{user.username}</p>
+      <p className="col-span-2 flex flex-col justify-center items-start capitalize">{user.role}</p>
+      <p className="col-span-2 flex flex-col justify-center items-start capitalize">Fele User</p>
+      <section className="col-span-2 flex flex-col justify-center items-start">
         <button onClick={() => setIsModalOpen({ show: true, data: user })} type="button" className="rounded-lg text-red-600 bg-slate-100 p-2 text-xs inline-flex justify-center items-center gap-1 transition-all duration-200 disabled:opacity-30 hover:bg-slate-200 disabled:cursor-not-allowed">
           <TrashIcon className="h-3.5 w-3.5" />
           Delete User
@@ -72,12 +74,13 @@ const Mappings = () => {
             channel={organizationConfig.channel}
           />
           <section className="py-2 px-4">
-            <section className="grid grid-cols-9 font-semibold py-1.5 border-b-2 border-slate-100">
-              <p className="col-span-3">Username</p>
-              <p className="col-span-3">Role</p>
-              <p className="col-span-3">Actions</p>
+            <section className="grid grid-cols-8 font-semibold py-1.5 border-b-2 border-slate-100">
+              <p className="col-span-2">Username</p>
+              <p className="col-span-2">Role</p>
+              <p className="col-span-2">Fele User</p>
+              <p className="col-span-2">Actions</p>
             </section>
-            <section>{users.map(renderUser)}</section>
+            <section>{mappings.map(renderMappings)}</section>
           </section>
         </article>
       </main>

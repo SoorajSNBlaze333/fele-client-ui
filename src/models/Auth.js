@@ -4,7 +4,10 @@ import { removeItem, setItem } from "@/lib/Storage";
 
 export const login = async(credentials) => {
   return API.post(LOGIN, credentials, { headers: { organization: credentials.organization }})
-    .then(data => data.token)
+    .then(data => {
+      setItem("user", { "username": data.username });
+      return data.token;
+    })
     .then(token => setItem("token", token))
     .then(() => setItem("organization", { organization: credentials.organization }))
     .catch(error => { throw new Error(error) })

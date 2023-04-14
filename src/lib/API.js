@@ -60,7 +60,6 @@ class API {
   }
 
   static async request(options) {
-    console.log(options);
     return this.http({ ...options, headers: { ...options.headers, organization: "uhcl" }})
       .then((response) => response.data)
       .catch((error) => Promise.reject(error));

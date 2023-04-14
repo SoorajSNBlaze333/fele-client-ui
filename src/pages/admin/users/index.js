@@ -12,7 +12,7 @@ import Sidebar from "@/components/shared/Sidebar";
 
 const inter = Inter({ subsets: ['latin'] })
 
-const Admin = () => {
+const Admin = ({ currentUser }) => {
   const [organizationConfig, setOrganizationConfig] = useState({ organization: "", network: "", channel: "" });
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState({ show: false, data: {} });
@@ -38,7 +38,7 @@ const Admin = () => {
   const handleDeleteUser = async({ show, data }) => {
     return deleteLocalUser(data.username)
       .then(() => fetchLocalOrgUsers()) // TODO remove the username from the state
-      .then(() => setIsModalOpen({ show: false, data: {} }))
+      .then(() => setIsModalOpen({ show, data: {} }))
       .catch(error => console.log(error))
   }
 
@@ -47,7 +47,7 @@ const Admin = () => {
       <p className="col-span-3 flex flex-col justify-center items-start">{user.username}</p>
       <p className="col-span-3 flex flex-col justify-center items-start capitalize">{user.role}</p>
       <section className="col-span-3 flex flex-col justify-center items-start">
-        <button onClick={() => setIsModalOpen({ show: true, data: user })} type="button" className="rounded-lg text-red-600 bg-slate-100 p-2 text-xs inline-flex justify-center items-center gap-1 transition-all duration-200 disabled:opacity-30 hover:bg-slate-200 disabled:cursor-not-allowed">
+        <button onClick={() => setIsModalOpen({ show: true, data: user })} disabled={user.username === currentUser.username} type="button" className="rounded-lg text-red-600 bg-slate-100 p-2 text-xs inline-flex justify-center items-center gap-1 transition-all duration-200 disabled:opacity-30 hover:bg-slate-200 disabled:cursor-not-allowed">
           <TrashIcon className="h-3.5 w-3.5" />
           Delete User
         </button>

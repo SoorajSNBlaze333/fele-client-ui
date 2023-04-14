@@ -1,4 +1,4 @@
-import { DELETE_LOCAL_USER, ORGANIZATION_CHANNELS, ORGANIZATION_NETWORKS, ORGANIZATION_USERS } from "@/config/routes"
+import { DELETE_LOCAL_USER, ORGANIZATION_CHANNELS, ORGANIZATION_MAPPINGS, ORGANIZATION_NETWORKS, ORGANIZATION_USERS } from "@/config/routes"
 import API from "@/lib/API"
 import { getItem } from "@/lib/Storage"
 
@@ -22,6 +22,12 @@ export const getOrganizationUsers = async() => {
 
 export const deleteLocalUser = async(username) => {
   return API.delete(DELETE_LOCAL_USER(username), { headers: { Authorization: getItem("token") }})
+    .then(response => response)
+    .catch(error => { throw new Error(error) })
+}
+
+export const fetchLocalOrganizationMappings = async(network, channel) => {
+  return API.get(ORGANIZATION_MAPPINGS, { headers: { Authorization: getItem("token"), network, channel }})
     .then(response => response)
     .catch(error => { throw new Error(error) })
 }

@@ -1,29 +1,42 @@
 import { getItem } from "@/lib/Storage";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-const { useRouter } = require("next/router");
 
 const withAuthentication = (Component) => {
   const AuthenticatedComponent = () => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
-    // const [organizationData, setOrganizationData] = useState(null);
+    const [currentUser, setCurrentUser] = useState(null);
 
-    const checkAuthentication = () => {
-      const token = getItem("token");
-      // const orgData = getItem("organization");
-      // setOrganizationData(orgData)
-      if (!token) {
-        return router.push('/');
-      }
-      setIsLoading(false);
+    const checkAuthentication = async() => {
+      const authPromise = () => new Promise((resolve, reject) => {
+        try {
+          const token = getItem("token");
+          const user = getItem("user");
+          resolve({ token, user });
+        } catch(err) {
+          reject(err);
+        }
+      });
+
+      return authPromise()
+        .then(({ token, user }) => {
+          if (!token || !user) {
+            return router.push('/');
+          }
+          setCurrentUser(user);
+        })
+        .then(() => setIsLoading(false))
+        .catch(error => console.log(error))
     }
 
     useEffect(() => {
       checkAuthentication();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
+    
     if (isLoading) return <section>Loading. Please wait!</section>
-    return <Component />;
+    return <Component currentUser={currentUser} />;
   };
   return AuthenticatedComponent;
 }
