@@ -12,7 +12,7 @@ import Sidebar from "@/components/shared/Sidebar";
 
 const inter = Inter({ subsets: ['latin'] })
 
-const Admin = () => {
+const Mappings = () => {
   const [organizationConfig, setOrganizationConfig] = useState({ organization: "", network: "", channel: "" });
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState({ show: false, data: {} });
@@ -87,4 +87,4 @@ const Admin = () => {
   </>)
 }
 
-export default withAuthentication(Admin);
+export default withAuthentication(Mappings);
