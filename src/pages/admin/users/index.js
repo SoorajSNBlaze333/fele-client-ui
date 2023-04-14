@@ -9,6 +9,7 @@ import { deleteLocalUser, getOrganizationUsers } from "@/models/Organization";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import Modal from "@/components/shared/Dialog";
 import Sidebar from "@/components/shared/Sidebar";
+import RoleBadge from "@/components/shared/RoleBadge";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -45,7 +46,9 @@ const Admin = ({ currentUser }) => {
   const renderUser = (user, index) => {
     return <section key={"local-user-"+index} className="grid grid-cols-9 py-1.5 border-b-2 border-slate-50 text-sm">
       <p className="col-span-3 flex flex-col justify-center items-start">{user.username}</p>
-      <p className="col-span-3 flex flex-col justify-center items-start capitalize">{user.role}</p>
+      <p className="col-span-3 flex flex-col justify-center items-start capitalize">
+        <RoleBadge role={user.role} />
+      </p>
       <section className="col-span-3 flex flex-col justify-center items-start">
         <button onClick={() => setIsModalOpen({ show: true, data: user })} disabled={user.username === currentUser.username} type="button" className="rounded-lg text-red-600 bg-slate-100 p-2 text-xs inline-flex justify-center items-center gap-1 transition-all duration-200 disabled:opacity-30 hover:bg-slate-200 disabled:cursor-not-allowed">
           <TrashIcon className="h-3.5 w-3.5" />

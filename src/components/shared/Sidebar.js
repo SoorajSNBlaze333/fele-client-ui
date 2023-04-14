@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const ACTIVE_CLASSNAME = "py-2 px-2 bg-green-600/30 w-full rounded-md font-semibold";
-const INACTIVE_CLASSNAME = "py-2 px-2 w-full";
+const ACTIVE_CLASSNAME = "py-2 px-2 bg-green-600/20 w-full rounded-md font-semibold text-xs";
+const INACTIVE_CLASSNAME = "py-2 px-2 w-full text-xs";
 
 export default function Sidebar() {
   const router = useRouter();

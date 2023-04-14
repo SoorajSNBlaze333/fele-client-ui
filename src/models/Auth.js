@@ -1,5 +1,5 @@
-import { LOGIN } from "@/config/routes";
 import API from "@/lib/API";
+import { LOGIN, SYNC_ORG } from "@/config/routes";
 import { removeItem, setItem } from "@/lib/Storage";
 
 export const login = async(credentials) => {
@@ -8,8 +8,12 @@ export const login = async(credentials) => {
       setItem("user", { "username": data.username });
       return data.token;
     })
-    .then(token => setItem("token", token))
-    .then(() => setItem("organization", { organization: credentials.organization }))
+    .then(token => {
+      setItem("organization", { organization: credentials.organization });
+      setItem("token", token);
+      return token;
+    })
+    .then((token) => API.get(SYNC_ORG, { headers: { Authorization: token }}))
     .catch(error => { throw new Error(error) })
 }
 

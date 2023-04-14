@@ -3,6 +3,7 @@ const BASE_URL = "http://localhost:8005";
 const LOCAL_ROUTES = "/api/localorganization";
 
 export const LOGIN = BASE_URL + LOCAL_ROUTES + "/login";
+export const SYNC_ORG = BASE_URL + LOCAL_ROUTES + "/sync";
 export const ORGANIZATION_NETWORKS = BASE_URL + LOCAL_ROUTES + "/network/list";
 export const ORGANIZATION_CHANNELS = BASE_URL + LOCAL_ROUTES + "/channels/list";
 
