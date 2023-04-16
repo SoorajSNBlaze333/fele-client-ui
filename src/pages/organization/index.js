@@ -43,7 +43,7 @@ const Organization = ({ orgConfig = {
       network: organizationConfig.network,
       channel: organizationConfig.channel
     }
-    setItem("organization", JSON.stringify(orgData))
+    setItem("organization", orgData)
     router.push('/admin/users');
   }
 
@@ -108,6 +108,10 @@ const Organization = ({ orgConfig = {
               <p className="text-2xl font-bold">Network & Channel</p>
               <p className="text-base text-slate-400">{"Choose your organization's Network and Channel"}</p>
             </section>
+            {/* <section className="w-100 mb-8 flex justify-start items-center">
+              <p className="text-2xl font-bold">Your organization</p>
+              <p className="text-base text-slate-400">{getItem("organization").organization}</p>
+            </section> */}
             <section className="w-100 flex flex-col mb-7">
               <label htmlFor="network-selection" className="w-100 text-slate-500 font-medium mb-1">Network</label>
               <Listbox id="network-selection" name="network" value={organizationConfig.network} onChange={(value) => handleChange("network", value)}>

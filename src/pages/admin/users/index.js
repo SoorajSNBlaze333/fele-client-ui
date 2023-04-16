@@ -7,9 +7,10 @@ import Header from "@/components/shared/Header";
 import { useRouter } from "next/router";
 import { deleteLocalUser, getOrganizationUsers } from "@/models/Organization";
 import { TrashIcon } from "@heroicons/react/20/solid";
-import Modal from "@/components/shared/Dialog";
+import Modal from "@/components/atoms/Modal";
 import Sidebar from "@/components/shared/Sidebar";
 import RoleBadge from "@/components/shared/RoleBadge";
+import AddLocalUser from "@/components/molecules/AddLocalUser";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -30,11 +31,13 @@ const Admin = ({ currentUser }) => {
     if (!organization) {
       router.push('/organization');
     } else {
-      setOrganizationConfig(JSON.parse(organization));
+      setOrganizationConfig(organization);
       fetchLocalOrgUsers();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleUserAdd = () => fetchLocalOrgUsers();
 
   const handleDeleteUser = async({ show, data }) => {
     return deleteLocalUser(data.username)
@@ -46,7 +49,7 @@ const Admin = ({ currentUser }) => {
   const renderUser = (user, index) => {
     return <section key={"local-user-"+index} className="grid grid-cols-9 py-1.5 border-b-2 border-slate-50 text-sm">
       <p className="col-span-3 flex flex-col justify-center items-start">{user.username}</p>
-      <p className="col-span-3 flex flex-col justify-center items-start capitalize">
+      <p className="col-span-3 flex flex-col justify-center items-start">
         <RoleBadge role={user.role} />
       </p>
       <section className="col-span-3 flex flex-col justify-center items-start">
@@ -74,6 +77,7 @@ const Admin = ({ currentUser }) => {
             network={organizationConfig.network} 
             channel={organizationConfig.channel}
           />
+          <AddLocalUser onUserAdd={handleUserAdd} />
           <section className="py-2 px-4">
             <section className="grid grid-cols-9 font-semibold py-1.5 border-b-2 border-slate-100">
               <p className="col-span-3">Username</p>

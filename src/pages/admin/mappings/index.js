@@ -7,12 +7,13 @@ import Header from "@/components/shared/Header";
 import { useRouter } from "next/router";
 import { deleteLocalUser, fetchLocalOrganizationMappings } from "@/models/Organization";
 import { TrashIcon } from "@heroicons/react/20/solid";
-import Modal from "@/components/shared/Dialog";
+import Modal from "@/components/atoms/Modal";
 import Sidebar from "@/components/shared/Sidebar";
+import AddMapping from "@/components/molecules/AddMapping";
 
 const inter = Inter({ subsets: ['latin'] })
 
-const Mappings = () => {
+const Mappings = ({ currentUser }) => {
   const [organizationConfig, setOrganizationConfig] = useState({ organization: "", network: "", channel: "" });
   const [mappings, setMappings] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState({ show: false, data: {} });
@@ -29,9 +30,8 @@ const Mappings = () => {
     if (!organization) {
       router.push('/organization');
     } else {
-      const org = JSON.parse(organization)
-      setOrganizationConfig(org);
-      fetchLocalOrgMappings(org);
+      setOrganizationConfig(organization);
+      fetchLocalOrgMappings(organization);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -42,6 +42,8 @@ const Mappings = () => {
       .then(() => setIsModalOpen({ show, data: {} }))
       .catch(error => console.log(error))
   }
+
+  const handleOnMap = () => fetchLocalOrgMappings(organizationConfig);
 
   const renderMappings = (user, index) => {
     return <section key={"local-user-"+index} className="grid grid-cols-8 py-1.5 border-b-2 border-slate-50 text-sm">
@@ -73,6 +75,7 @@ const Mappings = () => {
             network={organizationConfig.network} 
             channel={organizationConfig.channel}
           />
+          <AddMapping onUserMap={handleOnMap} currentUser={currentUser} />
           <section className="py-2 px-4">
             <section className="grid grid-cols-8 font-semibold py-1.5 border-b-2 border-slate-100">
               <p className="col-span-2">Username</p>
