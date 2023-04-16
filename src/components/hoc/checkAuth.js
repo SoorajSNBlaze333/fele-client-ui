@@ -10,9 +10,14 @@ const checkAuth = (Component) => {
     const checkAuthToken = () => {
       const token = getItem("token");
       const organization = getItem("organization");
+      const user = getItem("user");
       if (token) {
-        if (organization) return router.push('/admin/users')
-        return router.push('/organization');
+        if (user && user.role !== "Admin") return router.push('/user')
+        if (user && user.role === "Admin" && organization) return router.push('/admin/users')
+        else {
+          if (user.role === "Admin") return router.push('/organization');
+          else return router.push("/");
+        }
       }
       setIsLoading(false);
     }

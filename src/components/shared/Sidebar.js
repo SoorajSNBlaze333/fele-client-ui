@@ -11,19 +11,25 @@ const Sidebar = ({ currentUser }) => {
 
   return (
     <aside className="col-span-2 bg-green-100/70 h-100 w-full flex flex-col justify-between border-box text-sm">
-      <section className="flex flex-col justify-start items-start gap-2 w-100 p-4 ">
-        <p className="p-2 mb-4 font-semibold text-lg">Admin Dashboard</p>
-        <Link href="/admin/users" className={router.pathname == "/admin/users" ? ACTIVE_CLASSNAME : INACTIVE_CLASSNAME}>
-          <UserCircleIcon className="w-5 h-5" />
-          Local Users
-        </Link>
-        <Link href="/admin/mappings" className={router.pathname == "/admin/mappings" ? ACTIVE_CLASSNAME : INACTIVE_CLASSNAME}>
-          <LinkIcon className="w-5 h-5" />
-          User Mappings
-        </Link>
+      <section className="flex flex-col justify-start items-start gap-2 w-100 p-4">
+        <p className="mb-4 font-semibold text-lg">
+          {currentUser.role === "Admin" ? "Admin Dashboard" : "Dashboard"}
+        </p>
+        {currentUser.role === "Admin" && (
+          <>
+            <Link href="/admin/users" className={router.pathname == "/admin/users" ? ACTIVE_CLASSNAME : INACTIVE_CLASSNAME}>
+              <UserCircleIcon className="w-5 h-5" />
+              Local Users
+            </Link>
+            <Link href="/admin/mappings" className={router.pathname == "/admin/mappings" ? ACTIVE_CLASSNAME : INACTIVE_CLASSNAME}>
+              <LinkIcon className="w-5 h-5" />
+              User Mappings
+            </Link>
+          </>
+        )}
       </section>
       <section className="w-100 p-4 font-semibold">
-        Logged in as {currentUser.username}
+        Logged in as {currentUser.username} ({currentUser.role})
       </section>
     </aside>
   )

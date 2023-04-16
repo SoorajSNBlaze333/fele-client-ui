@@ -5,7 +5,7 @@ import { removeItem, setItem } from "@/lib/Storage";
 export const login = async(credentials) => {
   return API.post(LOGIN, credentials, { headers: { organization: credentials.organization }})
     .then(data => {
-      setItem("user", { "username": data.username });
+      setItem("user", { "username": data.username, "role": data.role });
       return data.token;
     })
     .then(token => {
@@ -25,5 +25,6 @@ export const verifyToken = async(token) => {
 
 export const logout = () => {
   removeItem("token");
+  removeItem("user");
   removeItem("organization");
 }

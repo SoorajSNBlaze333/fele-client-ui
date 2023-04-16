@@ -1,15 +1,15 @@
 import Head from 'next/head'
 import { Inter } from 'next/font/google'
-// import Link from 'next/link'
 import { useState } from 'react'
-import Router from 'next/router'
+import { useRouter } from 'next/router'
 import { login } from '@/models/Auth'
 import checkAuth from '@/components/hoc/checkAuth'
-// import DebugJSON from '@/components/debug/DebugJSON'
+import { getItem } from '@/lib/Storage'
 
 const inter = Inter({ subsets: ['latin'] })
 
 const Home = () => {
+  const router = useRouter();
   const [userCredentials, setUserCredentials] = useState({ username: '', password: '', organization: '' });
 
   const handleLogin = async(e) => {
@@ -18,7 +18,11 @@ const Home = () => {
       return;
     }
     return login(userCredentials)
-      .then(() => Router.push('/organization'))
+      .then(() => {
+        const user = getItem("user");
+        if (user.role !== "Admin") router.push("/");
+        else router.push('/organization');
+      })
       .catch(error => console.log(error))
   }
 
@@ -61,11 +65,6 @@ const Home = () => {
                 </fieldset>
               </form>
             </section>
-            {/* <section className="w-100 flex justify-center items-center">
-              <p className="text-slate-400 font-medium">{"Don't have an account ?"}</p>
-              <Link href="/register" className="ml-1 font-semibold text-green-700">Register</Link>
-            </section> */}
-            {/* <DebugJSON json={userCredentials} /> */}
           </section>
         </article>
       </main>
