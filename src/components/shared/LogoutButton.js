@@ -1,6 +1,7 @@
 import { logout } from "@/models/Auth";
-import { ArrowLeftCircleIcon } from "@heroicons/react/20/solid";
+import { ArrowLeftCircleIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
+import Button from "../atoms/Button";
 
 export default function LogoutButton() {
   const router = useRouter();
@@ -11,9 +12,11 @@ export default function LogoutButton() {
   }
 
   return (
-    <button onClick={handleLogout} type="button" className="rounded-lg text-red-600 bg-slate-100 p-2 text-sm flex justify-center items-center gap-1 absolute top-4 right-4">
-      <ArrowLeftCircleIcon className="h-4 w-4" />
-      <span>Logout</span>
-    </button>
+    <section className="absolute top-4 right-4">
+      <Button onClick={handleLogout} type="button" danger size="sm">
+        <ArrowLeftCircleIcon className="h-4 w-4" />
+        Logout
+      </Button>
+    </section>
   )
 }
