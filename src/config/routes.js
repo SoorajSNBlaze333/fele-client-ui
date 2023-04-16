@@ -15,3 +15,4 @@ export const DELETE_LOCAL_USER = (username) => `${BASE_URL}${LOCAL_ROUTES}/delet
 
 export const ORGANIZATION_MAPPINGS = BASE_URL + LOCAL_ROUTES + "/mappings";
 export const ADD_MAPPING = BASE_URL + LOCAL_ROUTES + "/mappings/add";
+export const DELETE_MAPPING = BASE_URL + LOCAL_ROUTES + "/mappings/delete";

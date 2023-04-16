@@ -3,7 +3,7 @@ import Button from "../atoms/Button";
 import ModalDynamic from "../atoms/ModalDynamic";
 import { addMapping, fetchFeleUsers, getOrganizationUsers } from "@/models/Organization";
 import { Listbox, Transition } from "@headlessui/react";
-import { ArrowRightIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
+import { ArrowRightIcon, ChevronUpDownIcon, PlusIcon } from "@heroicons/react/20/solid";
 import { getItem } from "@/lib/Storage";
 
 export default function AddMapping({ onUserMap = () => {}, currentUser }) {
@@ -33,7 +33,8 @@ export default function AddMapping({ onUserMap = () => {}, currentUser }) {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    return addMapping(mapping)
+    const { network, channel } = getItem("organization");
+    return addMapping(mapping, network, channel)
       .then(user => onUserMap(user))
       .then(() => setIsModalOpen(false))
       .catch(error => console.log(error))
@@ -42,6 +43,7 @@ export default function AddMapping({ onUserMap = () => {}, currentUser }) {
   return (
     <section className="py-2 px-4">
       <Button primary size="sm" onClick={() => setIsModalOpen(true)}>
+        <PlusIcon className="h-3.5 w-3.5" />
         Add New Mapping
       </Button>
       <ModalDynamic

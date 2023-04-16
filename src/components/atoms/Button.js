@@ -4,22 +4,21 @@ export default function Button({
   primary = false,
   danger = false,
   neutral = false,
+  inverted = false,
   disabled = false,
   onClick = () => {},
   ...props
 }) {
   const classNameProps = [];
-  classNameProps.push("rounded-md text-white font-medium transition-all duration-100 inline-flex justify-center items-center disabled:cursor-not-allowed");
+  classNameProps.push("rounded-md font-medium transition-all duration-100 inline-flex justify-center items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed");
 
   if (primary) {
-    if (disabled) classNameProps.push("bg-green-700/60");
-    else classNameProps.push("bg-green-700/80 hover:bg-green-700/60");
+    classNameProps.push("bg-green-700/80 hover:bg-green-700/60 text-white ");
   } else if (danger) {
-    if (disabled) classNameProps.push("bg-red-700/60");
-    else classNameProps.push("bg-red-600/90 hover:bg-red-600/100");
+    if (inverted) classNameProps.push("text-red-600 bg-slate-100 hover:bg-slate-200");
+    else classNameProps.push("bg-red-600/90 hover:bg-red-600/100 text-white ");
   } else if (neutral) {
-    if (disabled) classNameProps.push("bg-slate-100/60");
-    else classNameProps.push("bg-slate-100 hover:bg-slate-200 text-black");
+    classNameProps.push("bg-slate-100 hover:bg-slate-200 text-black");
   }
 
   if (size === "lg") {
@@ -27,7 +26,7 @@ export default function Button({
   } else if (size === "md") {
     classNameProps.push("px-4 py-2 text-md");
   } else if (size === "sm") {
-    classNameProps.push("px-4 py-2 text-sm");
+    classNameProps.push("px-3 py-2 text-xs");
   } else if (size === "xs") {
     classNameProps.push("px-3 py-1 text-xs");
   }

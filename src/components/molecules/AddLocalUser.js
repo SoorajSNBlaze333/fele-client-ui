@@ -2,6 +2,7 @@ import { useState } from "react";
 import Button from "../atoms/Button";
 import ModalDynamic from "../atoms/ModalDynamic";
 import { addLocalUser } from "@/models/Organization";
+import { PlusIcon } from "@heroicons/react/20/solid";
 
 export default function AddLocalUser({ onUserAdd = () => {} }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,6 +25,7 @@ export default function AddLocalUser({ onUserAdd = () => {} }) {
   return (
     <section className="py-2 px-4">
       <Button primary size="sm" onClick={() => setIsModalOpen(true)}>
+        <PlusIcon className="h-3.5 w-3.5" />
         Add Local User
       </Button>
       <ModalDynamic

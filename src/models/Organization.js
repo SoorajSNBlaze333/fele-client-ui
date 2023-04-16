@@ -1,51 +1,70 @@
-import { ADD_LOCAL_USER, ADD_MAPPING, DELETE_LOCAL_USER, ORGANIZATION_CHANNELS, ORGANIZATION_FELE_USERS, ORGANIZATION_MAPPINGS, ORGANIZATION_NETWORKS, ORGANIZATION_USERS } from "@/config/routes"
+import { ADD_LOCAL_USER, ADD_MAPPING, DELETE_LOCAL_USER, DELETE_MAPPING, ORGANIZATION_CHANNELS, ORGANIZATION_FELE_USERS, ORGANIZATION_MAPPINGS, ORGANIZATION_NETWORKS, ORGANIZATION_USERS } from "@/config/routes"
 import API from "@/lib/API"
 import { getItem } from "@/lib/Storage"
 
+const beforeRequest = () => {
+  const { organization, network, channel } = getItem("organization");
+  const headers = { Authorization: getItem("token"), organization, network, channel };
+  return {
+    headers,
+    organization,
+    network,
+    channel
+  }
+}
+
+const handleError = (error) => { throw new Error(error) };
+
 export const getOrganizationNetworks = async() => {
-  return API.get(ORGANIZATION_NETWORKS, { headers: { Authorization: getItem("token") }})
-    .then(response => response)
-    .catch(error => { throw new Error(error) })
+  const { headers } = beforeRequest();
+  return API.get(ORGANIZATION_NETWORKS, { headers })
+    .catch(handleError)
 }
 
 export const getOrganizationChannels = async(network) => {
-  return API.get(ORGANIZATION_CHANNELS, { headers: { network, Authorization: getItem("token") }})
-    .then(response => response)
-    .catch(error => { throw new Error(error) })
+  const { headers } = beforeRequest();
+  return API.get(ORGANIZATION_CHANNELS, { headers: { ...headers, network } })
+    .catch(handleError)
 }
 
 export const getOrganizationUsers = async() => {
-  return API.get(ORGANIZATION_USERS, { headers: { Authorization: getItem("token") }})
-    .then(response => response)
-    .catch(error => { throw new Error(error) })
+  const { headers } = beforeRequest();
+  return API.get(ORGANIZATION_USERS, { headers })
+    .catch(handleError)
 }
 
 export const addLocalUser = async(credentials) => {
-  return API.post(ADD_LOCAL_USER, credentials, { headers: { Authorization: getItem("token") }})
-    .then(response => response)
-    .catch(error => { throw new Error(error) })
+  const { headers } = beforeRequest();
+  return API.post(ADD_LOCAL_USER, credentials, { headers })
+    .catch(handleError)
 }
 
 export const deleteLocalUser = async(username) => {
-  return API.delete(DELETE_LOCAL_USER(username), { headers: { Authorization: getItem("token") }})
-    .then(response => response)
-    .catch(error => { throw new Error(error) })
+  const { headers } = beforeRequest();
+  return API.delete(DELETE_LOCAL_USER(username), { headers })
+    .catch(handleError)
 }
 
-export const fetchLocalOrganizationMappings = async(network, channel) => {
-  return API.get(ORGANIZATION_MAPPINGS, { headers: { Authorization: getItem("token"), network, channel }})
-    .then(response => response)
-    .catch(error => { throw new Error(error) })
+export const fetchLocalOrganizationMappings = async() => {
+  const { headers } = beforeRequest();
+  return API.get(ORGANIZATION_MAPPINGS, { headers })
+    .catch(handleError)
 }
 
-export const fetchFeleUsers = async(network, channel) => {
-  return API.get(ORGANIZATION_FELE_USERS, { headers: { Authorization: getItem("token"), network, channel }})
-    .then(response => response)
-    .catch(error => { throw new Error(error) })
+export const fetchFeleUsers = async() => {
+  const { headers } = beforeRequest();
+  return API.get(ORGANIZATION_FELE_USERS, { headers })
+    .catch(handleError)
 }
 
 export const addMapping = async(mapping) => {
-  return API.post(ADD_MAPPING, mapping, { headers: { Authorization: getItem("token") }})
-    .then(response => response)
-    .catch(error => { throw new Error(error) })
+  const { headers } = beforeRequest();
+  return API.post(ADD_MAPPING, mapping, { headers })
+    .catch(handleError)
+}
+
+export const deleteMapping = async(username) => {
+  const { headers } = beforeRequest();
+  return API.delete(DELETE_MAPPING, { headers, params: { username } })
+    .catch(handleError)
 }
