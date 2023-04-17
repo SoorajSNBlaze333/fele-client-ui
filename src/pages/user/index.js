@@ -1,6 +1,6 @@
 import withAuthentication from "@/components/hoc/withAuthentication";
+import Header from "@/components/shared/Header";
 import LogoutButton from "@/components/shared/LogoutButton";
-import Sidebar from "@/components/shared/Sidebar";
 import { Inter } from "next/font/google";
 import Head from "next/head";
 
@@ -14,14 +14,12 @@ const User = ({ currentUser }) => {
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <link rel="icon" href="/favicon.ico" />
     </Head>
-    <div className={inter.className + " h-full w-full grid grid-cols-10"}>
-      <Sidebar />
-      <main className="col-span-8">
-        This is user page
-        {/* TODO: Add the user functions here */}
-      </main>
+    <main className={inter.className + " h-full w-full"}>
+      <article className="">
+        <Header />
+      </article>
       <LogoutButton />
-    </div>
+    </main>
   </>)
 }
 

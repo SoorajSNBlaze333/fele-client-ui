@@ -12,7 +12,7 @@ export default function LogoutButton() {
   }
 
   return (
-    <section className="absolute top-4 right-4">
+    <section className="absolute top-6 right-6">
       <Button onClick={handleLogout} type="button" danger size="sm">
         <ArrowLeftCircleIcon className="h-4 w-4" />
         Logout
