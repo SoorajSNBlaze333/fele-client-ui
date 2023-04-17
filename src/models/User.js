@@ -1,4 +1,4 @@
-import { CREATE_ASSET, GET_ASSETS } from "@/config/routes";
+import { CREATE_ASSET, GET_ASSETS, INVOKE_CHAINCODE } from "@/config/routes";
 import API from "@/lib/API";
 import { getItem } from "@/lib/Storage";
 
@@ -22,6 +22,20 @@ export const createAsset = async(data) => {
   }
 
   return API.post(CREATE_ASSET, { ...createAssetData }, { headers })
+    .catch(error => { throw new Error(error) })
+}
+
+export const invokeChaincode = async(data) => {
+  const { headers, network, channel } = beforeRequest();
+  const createAssetData = {
+    network,
+    channel,
+    data,
+    chaincodeName: "EmployeeAsset",
+    chaincodeAction: "createAsset"
+  }
+
+  return API.post(INVOKE_CHAINCODE, { ...createAssetData }, { headers })
     .catch(error => { throw new Error(error) })
 }
 
