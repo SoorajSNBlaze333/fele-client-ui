@@ -3,7 +3,7 @@ import withAuthentication from "@/components/hoc/withAuthentication";
 import AddAsset from "@/components/molecules/AddAsset";
 import Header from "@/components/shared/Header";
 import LogoutButton from "@/components/shared/LogoutButton";
-import { createAsset, getAssets } from "@/models/User";
+import { getAssets } from "@/models/User";
 import { Inter } from "next/font/google";
 import Head from "next/head";
 import { useEffect, useState } from "react";
@@ -59,7 +59,7 @@ const User = ({ currentUser }) => {
         <section className="py-2 px-4">
           <section className="grid grid-cols-8 font-semibold py-1.5 border-b-2 border-slate-100 text-sm">
             <p className="col-span-2">Asset Name</p>
-            <p className="col-span-2">Asset Desgination</p>
+            <p className="col-span-2">Asset Designation</p>
             <p className="col-span-2">Asset Salary</p>
             <p className="col-span-2">Actions</p>
           </section>
