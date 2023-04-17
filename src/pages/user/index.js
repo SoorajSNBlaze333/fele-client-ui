@@ -1,12 +1,50 @@
+import Button from "@/components/atoms/Button";
 import withAuthentication from "@/components/hoc/withAuthentication";
+import AddAsset from "@/components/molecules/AddAsset";
 import Header from "@/components/shared/Header";
 import LogoutButton from "@/components/shared/LogoutButton";
+import { createAsset, getAssets } from "@/models/User";
 import { Inter } from "next/font/google";
 import Head from "next/head";
+import { useEffect, useState } from "react";
 
 const inter = Inter({ subsets: ['latin'] })
 
 const User = ({ currentUser }) => {
+  const [assets, setAssets] = useState([]);
+
+  const fetchAssets = async() => {
+    return getAssets()
+      .then(assets => console.log(assets))
+      .catch(error => console.log(error))
+  }
+
+  useEffect(() => {
+    fetchAssets();
+  }, [])
+
+  const handleCreateAsset = () => fetchAssets();
+
+  const renderAssets = (asset, index) => {
+    return <section key={"asset-"+index} className="grid grid-cols-8 py-1.5 border-b-2 border-slate-50 text-sm">
+      <p className="col-span-2 flex flex-col justify-center items-start">{asset.name}</p>
+      <p className="col-span-2 flex flex-col justify-center items-start">{asset.designation}</p>
+      <p className="col-span-2 flex flex-col justify-center items-start">{asset.salary}</p>
+      <section className="col-span-2 flex flex-col justify-center items-start">
+        {/* <Button 
+          type="button"
+          onClick={() => setIsModalOpen({ show: true, data: mapping })} 
+          danger
+          inverted
+          size="sm"
+        >
+          <TrashIcon className="h-3.5 w-3.5" />
+          Delete Mapping
+        </Button> */}
+      </section>
+    </section>
+  }
+
   return (<>
     <Head>
       <title>FELE User</title>
@@ -17,6 +55,16 @@ const User = ({ currentUser }) => {
     <main className={inter.className + " h-full w-full"}>
       <article className="">
         <Header />
+        <AddAsset onAssetCreate={handleCreateAsset} />
+        <section className="py-2 px-4">
+          <section className="grid grid-cols-8 font-semibold py-1.5 border-b-2 border-slate-100 text-sm">
+            <p className="col-span-2">Asset Name</p>
+            <p className="col-span-2">Asset Desgination</p>
+            <p className="col-span-2">Asset Salary</p>
+            <p className="col-span-2">Actions</p>
+          </section>
+          <section>{assets.map(renderAssets)}</section>
+        </section>
       </article>
       <LogoutButton />
     </main>

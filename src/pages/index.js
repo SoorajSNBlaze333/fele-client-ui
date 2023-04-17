@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { login } from '@/models/Auth'
 import checkAuth from '@/components/hoc/checkAuth'
-import { getItem } from '@/lib/Storage'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,11 +17,7 @@ const Home = () => {
       return;
     }
     return login(userCredentials)
-      .then(() => {
-        const user = getItem("user");
-        if (user.role !== "Admin") router.push("/");
-        else router.push('/organization');
-      })
+      .then(() => router.push('/organization'))
       .catch(error => console.log(error))
   }
 

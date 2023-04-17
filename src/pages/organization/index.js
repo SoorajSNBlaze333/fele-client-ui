@@ -14,7 +14,7 @@ const inter = Inter({ subsets: ['latin'] })
 const Organization = ({ orgConfig = { 
   network: "Please select a network",
   channel: "Please select a channel"
-}}) => {
+}, currentUser }) => {
   const router = useRouter();
   const [organizationConfig, setOrganizationConfig] = useState({ 
     network: orgConfig.network, 
@@ -44,7 +44,8 @@ const Organization = ({ orgConfig = {
       channel: organizationConfig.channel
     }
     setItem("organization", orgData)
-    router.push('/admin/users');
+    if (currentUser.role === "Admin") return router.push('/admin/users');
+    else return router.push('/user');
   }
 
   const fetchNetworks = async() => {
