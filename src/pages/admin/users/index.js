@@ -12,19 +12,23 @@ import Sidebar from "@/components/shared/Sidebar";
 import RoleBadge from "@/components/shared/RoleBadge";
 import AddLocalUser from "@/components/molecules/AddLocalUser";
 import Button from "@/components/atoms/Button";
+import Spinner from "@/components/atoms/Spinner";
 
 const inter = Inter({ subsets: ['latin'] })
 
 const Admin = ({ currentUser }) => {
   const [organizationConfig, setOrganizationConfig] = useState({ organization: "", network: "", channel: "" });
+  const [isFetchingUsers, setIsFetchingUsers] = useState(false);
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState({ show: false, data: {} });
   const router = useRouter();
 
   const fetchLocalOrgUsers = async() => {
+    setIsFetchingUsers(true);
     return getOrganizationUsers()
       .then(users => setUsers(users))
       .catch(error => console.log(error))
+      .finally(() => setIsFetchingUsers(false))
   }
 
   useEffect(() => {
@@ -41,10 +45,12 @@ const Admin = ({ currentUser }) => {
   const handleUserAdd = () => fetchLocalOrgUsers();
 
   const handleDeleteUser = async({ show, data }) => {
+    setIsFetchingUsers(true);
     return deleteLocalUser(data.username)
       .then(() => fetchLocalOrgUsers()) // TODO remove the username from the state
       .then(() => setIsModalOpen({ show, data: {} }))
       .catch(error => console.log(error))
+      .finally(() => setIsFetchingUsers(false))
   }
 
   const renderUser = (user, index) => {
@@ -92,7 +98,7 @@ const Admin = ({ currentUser }) => {
               <p className="col-span-3">Role</p>
               <p className="col-span-3">Actions</p>
             </section>
-            <section>{users.map(renderUser)}</section>
+            {isFetchingUsers ? <Spinner /> : <section>{users.map(renderUser)}</section>}
           </section>
         </article>
       </main>
