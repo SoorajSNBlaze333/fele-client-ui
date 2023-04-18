@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { getOrganizationChannels, getOrganizationNetworks } from "@/models/Organization";
 import withAuthentication from "@/components/hoc/withAuthentication";
 import { getItem, setItem } from "@/lib/Storage";
-import LogoutButton from "@/components/shared/LogoutButton";
+import LogoutButton from "@/components/molecules/LogoutButton";
 
 const inter = Inter({ subsets: ['latin'] })
 
