@@ -54,7 +54,7 @@ export default function AddLocalUser({ onUserAdd = () => {} }) {
                 id="role" 
                 type="role"
                 value={userCredentials.role}
-                label="Local User"
+                label="Role"
                 options={ROLES}
                 handleChange={(name, value) => handleInput({ target: { name, value } })}
               />

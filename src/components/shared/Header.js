@@ -7,7 +7,7 @@ export default function Header({ organization = "", network = "", channel = "" }
     }
 
     return (<>
-      <h3 className="m-0 font-bold text-2xl uppercase">{organization}</h3>
+      <h3 className="m-0 font-bold text-2xl capitalize">{organization}</h3>
       <span className="m-0 font-bold text-2xl text-gray-600">/</span>
       <h3 className="m-0 font-bold text-2xl capitalize">{network}</h3>
       <span className="m-0 font-bold text-2xl text-gray-600">/</span>
