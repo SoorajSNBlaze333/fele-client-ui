@@ -20,7 +20,6 @@ class API {
 
   static retry() {
     clearTimeout(API.retryTimeout);
-    console.log("Trying to connect to the internet!");
     API.retryTimeout = setTimeout(() => API.dequeue(), 5000);
   }
 
