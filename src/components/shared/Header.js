@@ -3,7 +3,7 @@ import LogoutButton from "./LogoutButton";
 export default function Header({ organization = "", network = "", channel = "" }) {
   const renderHeader = () => {
     if (!organization.length || !network.length || !channel.length) {
-      return <h3 className="m-0 font-bold text-2xl">User Assets</h3>
+      return <h3 className="m-0 font-bold text-2xl">Employees</h3>
     }
 
     return (<>

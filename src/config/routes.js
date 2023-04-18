@@ -1,5 +1,5 @@
-// const BASE_URL = "http://localhost:8005";
-const BASE_URL = "http://10.91.69.228:8005";
+const BASE_URL = "http://localhost:8005";
+// const BASE_URL = "http://192.168.1.223:8005";
 const LOCAL_ROUTES = "/api/localorganization";
 const ASSET_ROUTES = "/api/fele/asset";
 const CHAINCODE_ROUTES = "/api/fele/chaincode";
@@ -18,6 +18,8 @@ export const DELETE_LOCAL_USER = (username) => `${BASE_URL}${LOCAL_ROUTES}/delet
 export const ORGANIZATION_MAPPINGS = BASE_URL + LOCAL_ROUTES + "/mappings";
 export const ADD_MAPPING = BASE_URL + LOCAL_ROUTES + "/mappings/add";
 export const DELETE_MAPPING = BASE_URL + LOCAL_ROUTES + "/mappings/delete";
+
+export const CURRENT_USER_MAPPING = BASE_URL + LOCAL_ROUTES + "/mappings/current-user";
 
 export const CREATE_ASSET = BASE_URL + ASSET_ROUTES + "/create-asset";
 export const GET_ASSETS = BASE_URL + ASSET_ROUTES + "/read-assets";
