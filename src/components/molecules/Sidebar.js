@@ -17,11 +17,11 @@ const Sidebar = ({ currentUser }) => {
         </p>
         {currentUser.role === "Admin" && (
           <>
-            <Link href="/admin/users" className={router.pathname == "/admin/users" ? ACTIVE_CLASSNAME : INACTIVE_CLASSNAME}>
+            <Link href={{ pathname: "/[organization]/admin/users", query: router.query }} className={router.pathname == "/admin/users" ? ACTIVE_CLASSNAME : INACTIVE_CLASSNAME}>
               <UserCircleIcon className="w-5 h-5" />
               Local Users
             </Link>
-            <Link href="/admin/mappings" className={router.pathname == "/admin/mappings" ? ACTIVE_CLASSNAME : INACTIVE_CLASSNAME}>
+            <Link href={{ pathname: "/[organization]/admin/mappings", query: router.query }} className={router.pathname == "/admin/mappings" ? ACTIVE_CLASSNAME : INACTIVE_CLASSNAME}>
               <LinkIcon className="w-5 h-5" />
               User Mappings
             </Link>

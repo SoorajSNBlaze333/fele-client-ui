@@ -34,7 +34,7 @@ const Admin = ({ currentUser }) => {
   useEffect(() => {
     const organization = getItem("organization");
     if (!organization) {
-      router.push('/organization');
+      router.push(`${organization.organization}/network`);
     } else {
       setOrganizationConfig(organization);
       fetchLocalOrgUsers();

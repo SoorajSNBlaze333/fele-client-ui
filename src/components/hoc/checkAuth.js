@@ -12,11 +12,23 @@ const checkAuth = (Component) => {
       const organization = getItem("organization");
       const user = getItem("user");
       if (token) {
-        if (user && user.role !== "Admin") return router.push('/user')
-        if (user && user.role === "Admin" && organization) return router.push('/admin/users')
+        if (user && user.role !== "Admin") return router.push({
+          pathname: "/[organization]/user",
+          query: router.query
+        })
+        if (user && user.role === "Admin" && organization) return router.push({
+          pathname: "/[organization]/admin/users",
+          query: router.query
+        })
         else {
-          if (user.role === "Admin") return router.push('/organization');
-          else return router.push("/");
+          if (user.role === "Admin") return router.push({
+            pathname: "/[organization]/network",
+            query: router.query
+          });
+          else return router.push({
+            pathname: "/[organization]/",
+            query: router.query
+          });
         }
       }
       setIsLoading(false);

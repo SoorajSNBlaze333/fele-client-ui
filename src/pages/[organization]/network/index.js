@@ -38,14 +38,21 @@ const Organization = ({ orgConfig = {
   }
 
   const handleDashboard = () => {
+    console.log("Came here");
     const orgData = {
       ...getItem("organization"),
       network: organizationConfig.network,
       channel: organizationConfig.channel
     }
-    setItem("organization", orgData)
-    if (currentUser.role === "Admin") return router.push('/admin/users');
-    else return router.push('/user');
+    setItem("organization", orgData); 
+    if (currentUser.role === "Admin") return router.push({
+      pathname: "/[organization]/admin/users",
+      query: { organization: orgData.organization }
+    });
+    else return router.push({
+      pathname: "/[organization]/user",
+      query: { organization: orgData.organization }
+    });
   }
 
   const fetchNetworks = async() => {

@@ -8,7 +8,10 @@ export default function LogoutButton() {
 
   const handleLogout = () => {
     logout();
-    router.push('/');
+    router.push({
+      pathname: "/[organization]",
+      query: router.query
+    });
   }
 
   return (

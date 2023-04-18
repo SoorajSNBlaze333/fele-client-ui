@@ -22,7 +22,11 @@ const withAuthentication = (Component) => {
       return authPromise()
         .then(({ token, user }) => {
           if (!token || !user) {
-            return router.push('/');
+            const { organization } = getItem(organization);
+            return router.push({
+              pathname: "/[organization]",
+              query: router.query
+            });
           }
           setCurrentUser(user);
         })
