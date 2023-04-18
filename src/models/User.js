@@ -1,4 +1,4 @@
-import { CREATE_ASSET, GET_ASSETS, INVOKE_CHAINCODE } from "@/config/routes";
+import { INVOKE_CHAINCODE } from "@/config/routes";
 import API from "@/lib/API";
 import { getItem } from "@/lib/Storage";
 
@@ -19,18 +19,6 @@ export const createAsset = async(data) => {
     network,
     channel,
     data,
-  }
-
-  return API.post(CREATE_ASSET, { ...createAssetData }, { headers })
-    .catch(error => { throw new Error(error) })
-}
-
-export const invokeChaincode = async(data) => {
-  const { headers, network, channel } = beforeRequest();
-  const createAssetData = {
-    network,
-    channel,
-    data,
     chaincodeName: "EmployeeAsset",
     chaincodeAction: "createAsset"
   }
@@ -40,8 +28,43 @@ export const invokeChaincode = async(data) => {
 }
 
 export const getAssets = async() => {
-  const { headers } = beforeRequest();
+  const { headers, network, channel } = beforeRequest();
+  const getAssetData = {
+    network,
+    channel,
+    chaincodeName: "EmployeeAsset",
+    chaincodeAction: "getAllAssets"
+  }
 
-  return API.get(GET_ASSETS, { headers })
+  return API.get(INVOKE_CHAINCODE, { headers, params: { ...getAssetData }})
+    .catch(error => { throw new Error(error) })
+}
+
+export const updateAsset = async(assetId, data) => {
+  const { headers, network, channel } = beforeRequest();
+  const updateAssetData = {
+    network,
+    channel,
+    assetId,
+    data,
+    chaincodeName: "EmployeeAsset",
+    chaincodeAction: "updateAsset"
+  }
+
+  return API.put(INVOKE_CHAINCODE, { headers, params: { ...updateAssetData }})
+    .catch(error => { throw new Error(error) })
+}
+
+export const deleteAsset = async(assetId) => {
+  const { headers, network, channel } = beforeRequest();
+  const deleteAssetData = {
+    network,
+    channel,
+    assetId,
+    chaincodeName: "EmployeeAsset",
+    chaincodeAction: "deleteAsset"
+  }
+
+  return API.delete(INVOKE_CHAINCODE, { headers, params: { ...deleteAssetData }})
     .catch(error => { throw new Error(error) })
 }

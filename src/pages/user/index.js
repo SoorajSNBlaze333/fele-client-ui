@@ -1,9 +1,12 @@
 import Button from "@/components/atoms/Button";
+import Modal from "@/components/atoms/Modal";
 import withAuthentication from "@/components/hoc/withAuthentication";
 import AddAsset from "@/components/molecules/AddAsset";
+import UpdateAsset from "@/components/molecules/UpdateAsset";
 import Header from "@/components/shared/Header";
 import LogoutButton from "@/components/shared/LogoutButton";
-import { getAssets } from "@/models/User";
+import { deleteAsset, getAssets } from "@/models/User";
+import { TrashIcon } from "@heroicons/react/24/outline";
 import { Inter } from "next/font/google";
 import Head from "next/head";
 import { useEffect, useState } from "react";
@@ -12,10 +15,11 @@ const inter = Inter({ subsets: ['latin'] })
 
 const User = ({ currentUser }) => {
   const [assets, setAssets] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState({ show: false, data: {} });
 
   const fetchAssets = async() => {
     return getAssets()
-      .then(assets => console.log(assets))
+      .then(assets => setAssets(assets))
       .catch(error => console.log(error))
   }
 
@@ -23,24 +27,32 @@ const User = ({ currentUser }) => {
     fetchAssets();
   }, [])
 
-  const handleCreateAsset = () => fetchAssets();
+  const handleAssetChange = () => fetchAssets();
+
+  const handleAssetDelete = async({ show, data }) => {
+    return deleteAsset(data._id)
+      .then(() => setIsModalOpen({ show, data: {} }))
+      .then(() => fetchAssets())
+      .catch(error => console.log(error))
+  }
 
   const renderAssets = (asset, index) => {
     return <section key={"asset-"+index} className="grid grid-cols-8 py-1.5 border-b-2 border-slate-50 text-sm">
       <p className="col-span-2 flex flex-col justify-center items-start">{asset.name}</p>
       <p className="col-span-2 flex flex-col justify-center items-start">{asset.designation}</p>
       <p className="col-span-2 flex flex-col justify-center items-start">{asset.salary}</p>
-      <section className="col-span-2 flex flex-col justify-center items-start">
-        {/* <Button 
+      <section className="col-span-2 flex justify-start items-center gap-2">
+        <UpdateAsset asset={asset} onAssetUpdate={handleAssetChange} />
+        <Button 
           type="button"
-          onClick={() => setIsModalOpen({ show: true, data: mapping })} 
+          onClick={() => setIsModalOpen({ show: true, data: asset })} 
           danger
           inverted
           size="sm"
         >
           <TrashIcon className="h-3.5 w-3.5" />
-          Delete Mapping
-        </Button> */}
+          Delete Asset
+        </Button>
       </section>
     </section>
   }
@@ -55,7 +67,7 @@ const User = ({ currentUser }) => {
     <main className={inter.className + " h-full w-full"}>
       <article className="">
         <Header />
-        <AddAsset onAssetCreate={handleCreateAsset} />
+        <AddAsset onAssetCreate={handleAssetChange} />
         <section className="py-2 px-4">
           <section className="grid grid-cols-8 font-semibold py-1.5 border-b-2 border-slate-100 text-sm">
             <p className="col-span-2">Asset Name</p>
@@ -67,6 +79,7 @@ const User = ({ currentUser }) => {
         </section>
       </article>
       <LogoutButton />
+      <Modal show={isModalOpen} onToggle={setIsModalOpen} handleAction={handleAssetDelete} />
     </main>
   </>)
 }
