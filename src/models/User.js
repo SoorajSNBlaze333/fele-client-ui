@@ -1,3 +1,4 @@
+import { ASSET } from "@/config/constants";
 import { CURRENT_USER_MAPPING, INVOKE_CHAINCODE } from "@/config/routes";
 import API from "@/lib/API";
 import { getItem } from "@/lib/Storage";
@@ -26,7 +27,7 @@ export const createAsset = async(data) => {
     network,
     channel,
     data,
-    chaincodeName: "EmployeeAsset",
+    chaincodeName: ASSET,
     chaincodeAction: "createAsset",
     invokerName: feleUser
   }
@@ -40,7 +41,7 @@ export const getAssets = async() => {
   const getAssetData = {
     network,
     channel,
-    chaincodeName: "EmployeeAsset",
+    chaincodeName: ASSET,
     chaincodeAction: "getAllAssets",
     invokerName: feleUser
   }
@@ -56,7 +57,7 @@ export const updateAsset = async(assetId, data) => {
     channel,
     assetId,
     data,
-    chaincodeName: "EmployeeAsset",
+    chaincodeName: ASSET,
     chaincodeAction: "updateAsset",
     invokerName: feleUser
   }
@@ -71,7 +72,7 @@ export const deleteAsset = async(assetId) => {
     network,
     channel,
     assetId,
-    chaincodeName: "EmployeeAsset",
+    chaincodeName: ASSET,
     chaincodeAction: "deleteAsset",
     invokerName: feleUser
   }

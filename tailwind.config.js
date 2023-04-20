@@ -9,7 +9,13 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'uhcl': '#dc2626',
+        'nexon': '#dc2626',
+        'velocity': '#15803d'
+      }
+    },
   },
   plugins: [],
 }

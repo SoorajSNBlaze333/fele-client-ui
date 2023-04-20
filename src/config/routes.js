@@ -1,5 +1,5 @@
 // const BASE_URL = "http://localhost:8005";
-const BASE_URL = "http://10.91.69.228:8005";
+const BASE_URL = "http://192.168.1.223:8005";
 const LOCAL_ROUTES = "/api/localorganization";
 const ASSET_ROUTES = "/api/fele/asset";
 const CHAINCODE_ROUTES = "/api/fele/chaincode";

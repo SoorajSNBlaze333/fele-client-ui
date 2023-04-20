@@ -5,7 +5,7 @@ export default function OutsideOrg() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/apple");
+    router.push("/uhcl");
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

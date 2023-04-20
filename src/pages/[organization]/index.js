@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { login } from '@/models/Auth'
 import checkAuth from '@/components/hoc/checkAuth'
+import Logo from '@/components/molecules/Logo'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -39,9 +40,11 @@ const Home = () => {
         <article className="h-full w-full flex justify-center items-center">
           <section className="h-auto flex flex-col w-[370px] text-sm">
             <section className="w-100 mb-8">
+              <Logo organization={organization} height={100} width={350} />
+            </section>
+            <section className="w-100 mb-8">
               <p className="text-2xl font-bold">Login</p>
               <p className="text-base text-slate-400">Login to your account now</p>
-              <p>{organization}</p>
             </section>
             <section className="w-100 mb-8">
               <form onSubmit={handleLogin} className="w-100">

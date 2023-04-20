@@ -3,19 +3,24 @@ import Button from "../atoms/Button";
 import ModalDynamic from "../atoms/ModalDynamic";
 import { updateAsset } from "@/models/User";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { ASSET_DATA, ASSET_TYPE } from "@/config/constants";
 
 export default function UpdateAsset({ asset = {}, onAssetUpdate = () => {} }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [assetDetails, setAssetDetails] = useState({ name: '', designation: '', salary: '' });
+  const [assetDetails, setAssetDetails] = useState(ASSET_DATA);
 
   useEffect(() => {
-    if (isModalOpen) setAssetDetails({ name: asset.name, designation: asset.designation, salary: asset.salary });
+    if (isModalOpen) setAssetDetails(() => {
+      const newData = {};
+      Object.keys(ASSET_DATA).forEach(key => newData[key] = asset[key]);
+      return newData;
+    });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isModalOpen]);
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    if (!assetDetails.name.length || !assetDetails.designation.length || !assetDetails.salary.length) return;
+    if (Object.values(assetDetails).some(value => !value.length)) return;
     return updateAsset(asset._id, assetDetails)
       .then(asset => onAssetUpdate(asset))
       .then(() => setIsModalOpen(false))
@@ -31,30 +36,24 @@ export default function UpdateAsset({ asset = {}, onAssetUpdate = () => {} }) {
     <section className="">
       <Button neutral size="sm" onClick={() => setIsModalOpen(true)}>
         <PencilSquareIcon className="h-3.5 w-3.5" />
-        Update Employee
+        Update {ASSET_TYPE}
       </Button>
       <ModalDynamic
-        title="Update Employee Info"
+        title={`Update ${ASSET_TYPE} Info`}
         show={isModalOpen}
         onClose={() => setIsModalOpen(prev => !prev)}
       >
         <>
           <form onSubmit={handleSubmit} className="w-100 text-sm mt-4">
-            <fieldset className="w-100 flex flex-col mb-7">
-              <label htmlFor="name" className="w-100 text-slate-500 font-medium mb-1">Employee Name</label>
-              <input id="name" type="text" name="name" required className="w-100 border-2 border-slate-200 rounded-lg p-2" placeholder="Enter employee name" value={assetDetails.name} onChange={handleInput} />
-            </fieldset>
-            <fieldset className="w-100 flex flex-col mb-7">
-              <label htmlFor="designation" className="w-100 text-slate-500 font-medium mb-1">Employee Designation</label>
-              <input id="designation" type="text" name="designation" required className="w-100 border-2 border-slate-200 rounded-lg p-2" placeholder="Enter employee designation" value={assetDetails.designation} onChange={handleInput} />
-            </fieldset>
-            <fieldset className="w-100 flex flex-col mb-7">
-              <label htmlFor="salary" className="w-100 text-slate-500 font-medium mb-1">Employee Salary</label>
-              <input id="salary" type="text" name="salary" required className="w-100 border-2 border-slate-200 rounded-lg p-2" placeholder="Enter employee salary" value={assetDetails.salary} onChange={handleInput} />
-            </fieldset>
+            {Object.keys(ASSET_DATA).map((input, index) => (
+              <fieldset key={"asset-"+index} className="w-100 flex flex-col mb-7">
+                <label htmlFor={input} className="w-100 text-slate-500 font-medium mb-1 capitalize">{ASSET_TYPE} {input}</label>
+                <input id={input} type="text" name={input} required className="w-100 border-2 border-slate-200 rounded-lg p-2" placeholder={`Enter ${ASSET_TYPE} ${input}`} value={assetDetails[input]} onChange={handleInput} />
+              </fieldset>
+            ))}
             <fieldset className="flex justify-end items-center gap-2">
               <Button type="button" neutral size="sm" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-              <Button type="submit" primary size="sm" onClick={handleSubmit}>Update Employee</Button>
+              <Button type="submit" primary size="sm" onClick={handleSubmit}>Update {ASSET_TYPE}</Button>
             </fieldset>
           </form>  
         </>

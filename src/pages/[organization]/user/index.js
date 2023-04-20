@@ -11,6 +11,7 @@ import { TrashIcon } from "@heroicons/react/24/outline";
 import { Inter } from "next/font/google";
 import Head from "next/head";
 import { useEffect, useState } from "react";
+import { ASSET_DATA, ASSET_TYPE } from "@/config/constants";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -36,7 +37,9 @@ const User = ({ currentUser }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleAssetChange = () => fetchAssets();
+  const handleAssetChange = () => {
+    fetchAssets();
+  }
 
   const handleAssetDelete = async({ show, data }) => {
     return deleteAsset(data._id)
@@ -47,10 +50,9 @@ const User = ({ currentUser }) => {
 
   const renderAssets = (asset, index) => {
     return <section key={"asset-"+index} className="grid grid-cols-12 py-1.5 border-b-2 border-slate-50 text-sm">
-      <p className="col-span-2 flex flex-col justify-center items-start">{asset.name}</p>
-      <p className="col-span-2 flex flex-col justify-center items-start">{asset.designation}</p>
-      <p className="col-span-2 flex flex-col justify-center items-start">{asset.salary}</p>
-      <p className="col-span-2 flex flex-col justify-center items-start">{asset?.invokerName}</p>
+      {Object.keys(ASSET_DATA).map((key, index) => (
+        <p key={index} className="col-span-2 flex flex-col justify-center items-start">{asset[key]}</p>
+      ))}
       <section className="col-span-4 flex justify-start items-center gap-2">
         <UpdateAsset asset={asset} onAssetUpdate={handleAssetChange} />
         <Button 
@@ -61,7 +63,7 @@ const User = ({ currentUser }) => {
           size="sm"
         >
           <TrashIcon className="h-3.5 w-3.5" />
-          Remove Employee
+          Remove {ASSET_TYPE}
         </Button>
       </section>
     </section>
@@ -84,10 +86,9 @@ const User = ({ currentUser }) => {
         <AddAsset onAssetCreate={handleAssetChange} />
         <section className="py-2 px-4">
           <section className="grid grid-cols-12 font-semibold py-1.5 border-b-2 border-slate-100 text-sm">
-            <p className="col-span-2">Employee Name</p>
-            <p className="col-span-2">Employee Designation</p>
-            <p className="col-span-2">Employee Salary</p>
-            <p className="col-span-2">Invoked By</p>
+            {Object.keys(ASSET_DATA).map((key, index) => (
+              <p key={index} className="col-span-2 capitalize">{ASSET_TYPE} {key}</p>
+            ))}
             <p className="col-span-4">Actions</p>
           </section>
           <section>{assets.map(renderAssets)}</section>
