@@ -14,6 +14,9 @@ module.exports = {
         'uhcl': '#dc2626',
         'nexon': '#dc2626',
         'velocity': '#15803d'
+      },
+      gridTemplateColumns: {
+        '14': 'repeat(14, minmax(0, 1fr))',
       }
     },
   },

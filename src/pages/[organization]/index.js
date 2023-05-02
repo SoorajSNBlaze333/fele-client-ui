@@ -46,7 +46,7 @@ const Home = () => {
               <p className="text-2xl font-bold">Login</p>
               <p className="text-base text-slate-400">Login to your account now</p>
             </section>
-            <section className="w-100 mb-8">
+            <section className="w-100">
               <form onSubmit={handleLogin} className="w-100">
                 <fieldset className="w-100 flex flex-col mb-7">
                   <label htmlFor="username" className="w-100 text-slate-500 font-medium mb-1">Username</label>

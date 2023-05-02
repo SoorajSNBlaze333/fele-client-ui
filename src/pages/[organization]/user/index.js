@@ -49,10 +49,11 @@ const User = ({ currentUser }) => {
   }
 
   const renderAssets = (asset, index) => {
-    return <section key={"asset-"+index} className="grid grid-cols-12 py-1.5 border-b-2 border-slate-50 text-sm">
+    return <section key={"asset-"+index} className="grid grid-cols-14 py-1.5 border-b-2 border-slate-50 text-sm">
       {Object.keys(ASSET_DATA).map((key, index) => (
         <p key={index} className="col-span-2 flex flex-col justify-center items-start">{asset[key]}</p>
       ))}
+      <p key={index} className="col-span-2 flex flex-col justify-center items-start">{asset.invokerName}</p>
       <section className="col-span-4 flex justify-start items-center gap-2">
         <UpdateAsset asset={asset} onAssetUpdate={handleAssetChange} />
         <Button 
@@ -85,10 +86,11 @@ const User = ({ currentUser }) => {
         />
         <AddAsset onAssetCreate={handleAssetChange} />
         <section className="py-2 px-4">
-          <section className="grid grid-cols-12 font-semibold py-1.5 border-b-2 border-slate-100 text-sm">
+          <section className="grid grid-cols-14 font-semibold py-1.5 border-b-2 border-slate-100 text-sm">
             {Object.keys(ASSET_DATA).map((key, index) => (
-              <p key={index} className="col-span-2 capitalize">{ASSET_TYPE} {key}</p>
+              <p key={index} className="col-span-2 capitalize">{ASSET_TYPE} {key.split("_").join(" ")}</p>
             ))}
+            <p className="col-span-2 flex flex-col justify-center items-start">Invoked By</p>
             <p className="col-span-4">Actions</p>
           </section>
           <section>{assets.map(renderAssets)}</section>

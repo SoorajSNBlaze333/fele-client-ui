@@ -38,8 +38,8 @@ export default function AddAsset({ onAssetCreate = () => {} }) {
           <form onSubmit={handleSubmit} className="w-100 text-sm mt-4">
             {Object.keys(ASSET_DATA).map((input, index) => (
               <fieldset key={"asset-"+index} className="w-100 flex flex-col mb-7">
-                <label htmlFor={input} className="w-100 text-slate-500 font-medium mb-1 capitalize">{ASSET_TYPE} {input}</label>
-                <input id={input} type="text" name={input} required className="w-100 border-2 border-slate-200 rounded-lg p-2" placeholder={`Enter ${ASSET_TYPE} ${input}`} onChange={handleInput} />
+                <label htmlFor={input} className="w-100 text-slate-500 font-medium mb-1 capitalize">{ASSET_TYPE} {input.split("_").join(" ")}</label>
+                <input id={input} type="text" name={input} required className="w-100 border-2 border-slate-200 rounded-lg p-2" placeholder={`Enter ${ASSET_TYPE} ${input.split("_").join(" ")}`} onChange={handleInput} />
               </fieldset>
             ))}
             <fieldset className="flex justify-end items-center gap-2">
