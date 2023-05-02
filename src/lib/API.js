@@ -59,7 +59,7 @@ class API {
   }
 
   static async request(options) {
-    return this.http({ ...options, headers: { ...options.headers, organization: "uhcl" }})
+    return this.http({ ...options, headers: { ...options.headers }})
       .then((response) => response.data)
       .catch((error) => Promise.reject(error));
   }

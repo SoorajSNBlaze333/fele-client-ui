@@ -15,8 +15,14 @@ const beforeRequest = () => {
 
 const handleError = (error) => { throw new Error(error) };
 
+const sync = async() => {
+  const { headers } = beforeRequest();
+  return API.get(SYNC_ORG, { headers });
+} 
+
 export const getOrganizationNetworks = async() => {
   const { headers } = beforeRequest();
+  const synced = await sync();
   return API.get(ORGANIZATION_NETWORKS, { headers })
     .catch(handleError)
 }
@@ -29,6 +35,7 @@ export const getOrganizationChannels = async(network) => {
 
 export const getOrganizationUsers = async() => {
   const { headers } = beforeRequest();
+  const synced = await sync();
   return API.get(ORGANIZATION_USERS, { headers })
     .catch(handleError)
 }
@@ -47,12 +54,14 @@ export const deleteLocalUser = async(username) => {
 
 export const fetchLocalOrganizationMappings = async() => {
   const { headers } = beforeRequest();
+  const synced = await sync();
   return API.get(ORGANIZATION_MAPPINGS, { headers })
     .catch(handleError)
 }
 
 export const fetchFeleUsers = async() => {
   const { headers } = beforeRequest();
+  const synced = await sync();
   return API.get(ORGANIZATION_FELE_USERS, { headers })
     .catch(handleError)
 }

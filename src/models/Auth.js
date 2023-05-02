@@ -13,7 +13,6 @@ export const login = async(credentials) => {
       setItem("token", token);
       return token;
     })
-    .then((token) => API.get(SYNC_ORG, { headers: { Authorization: token }}))
     .catch(error => { throw new Error(error) })
 }
 
